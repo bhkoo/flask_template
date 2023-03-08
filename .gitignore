@@ -128,5 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Databases
+# Databases, data
 .db
+uploads
