@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
+from os import path, mkdir
 from flask_login import LoginManager
 
 db = SQLAlchemy()
@@ -8,8 +8,17 @@ DB_NAME = 'database.db'
 
 def create_app():
     app = Flask(__name__)
+
+    UPLOAD_FOLDER = 'uploads'
+    if not path.exists(UPLOAD_FOLDER):
+        mkdir(UPLOAD_FOLDER)
+
+    ALLOWED_EXTENSIONS = {'mp3'}
+
     app.config['SECRET_KEY'] = 'dubbed-curled-renewable'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
     db.init_app(app)
 
     from .views import views
