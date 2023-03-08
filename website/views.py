@@ -13,32 +13,47 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
 @views.route('/', methods = ['GET', 'POST'])
+@login_required
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part', category = 'error')
             return redirect(request.url)
-        file = request.files['file']
+        files = request.files.getlist('file')
+        task = request.form['task']
+        id = request.form['participant-id']
+        num_files = len(files)
+        # check if ID is 5 digits
+        if len(id) != 5 or not id.isdigit():
+            flash('Please enter valid 5-digit ID.', category = 'error')
+        # check if task is selected
+        if task == '':
+            flash('Please select a task', category = 'error')
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
-        if file.filename == '':
-            flash('No selected file', category = 'error')
+        if '' in [file.filename for file in files]:
+            flash('Please make sure file names are not blank.', category = 'error')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+        if all(files) and all([allowed_file(file.filename) for file in files]):
+            dir = os.path.join(current_app.config['UPLOAD_FOLDER'], task, id)
+            if not os.path.exists(dir):
+                os.mkdir(dir)
+            for index, file in enumerate(files, start = 1):
+                ext = file.filename.rsplit('.', 1)[1].lower()
+                filename = '%s_%s_part%dof%d.%s' % (id, task, index, num_files, ext)
+                file.save(dir, filename)
             flash('Upload successful!', category = 'success')
             return redirect(request.url)
-    return '''
-    <!doctype html>
-    <title>Upload New File</title>
-    <h1>Upload New File</h1>
-    <form method=post enctype=multipart/form-data>
-        <input type=file name=file>
-        <input type=submit value=Upload>
-    </form>
-    '''
+        
+        # Other conditions:
+        # File hasn't already been uploaded
+
+        # To add:
+        # Update db
+
+
+    return render_template('home.html', user = current_user)
 
 @views.route('/', methods = ['GET', 'POST'])
 @login_required

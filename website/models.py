@@ -8,6 +8,14 @@ class Note(db.Model):
     date = db.Column(db.DateTime(timezone = True), default = func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+class File(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    date = db.Column(db.DateTime(timezone = True), default = func.now())
+    participant_id = db.Column(db.String(5))
+    task = db.Column(db.String(25))
+    first_name = db.Column(db.String(150))
+    last_name = db.Column(db.String(150))
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
     email = db.Column(db.String(150), unique = True)
