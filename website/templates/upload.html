@@ -2,32 +2,54 @@
 {% block title %}Upload{% endblock %}
 
 {% block content %}
-<h1 align = 'center'>Upload New File</h1>
+<h1 align = 'center'>Upload Files</h1>
 
 <form method = 'POST' enctype='multipart/form-data'>
   <fieldset>
-    <legend>Upload Audio</legend>
-    <label for = 'participant-id'>Participant ID: </label>
-    <input type = 'text'
-    class = 'form-control'
-    id = 'participant-id'
-    name = 'participant-id'
-    placeholder = 'Enter participant ID (5 digits)'
-    maxlength = 5 />
-    <label for = 'task'>Select a task</label>
-    <div>
-      <input type="radio" name="task" id="task1" value="task1"> Task 1 </input><br>
-      <input type="radio" name="task" id="task2" value="task2"> Task 2 </input><br>
-      <input type="radio" name="task" id="task3" value="task3"> Task 3 </input><br>
+    <div  class = 'mb-3'>
+      <label for = 'participant-id' class='form-label'>Participant ID: </label>
+      <input type = 'text'
+      class = 'form-control'
+      id = 'participant-id'
+      name = 'participant-id'
+      placeholder = 'Enter participant ID (5 digits)'
+      maxlength = 5 />
+    </div>
+    <div class = 'mb-3'>
+      <label for = 'task'>Select a task:</label>
+        <div class='form-check'>
+          <input class='form-check-input' type='radio' name='task' id='task1' value='task1'> 
+            <label class='form-check-label' for='task1'>
+              Task 1
+            </label>
+          </input>
+        </div>
+        <div class='form-check'>
+          <input class='form-check-input' type='radio' name='task' id='task2' value='task2'> 
+            <label class='form-check-label' for='task2'>
+              Task 2
+            </label>
+          </input>
+        </div>
+        <div class='form-check'>
+          <input class='form-check-input' type='radio' name='task' id='task3' value='task3'> 
+            <label class='form-check-label' for='task3'>
+              Task 3
+            </label>
+          </input>
+        </div>
     </div>
     <label for = 'comment'>Comment: </label>
-    <div>
-      <textarea name = 'comment' id = 'comment' maxlength = 1000></textarea>
+    <div class = 'mb-3 form-floating'>
+      <textarea class = 'form-control' name = 'comment' id = 'comment' maxlength = 1000></textarea>
     </div>
-    <label for = 'file'>Upload file: </label>
-    <div>
-      <input type=file name=file multiple>
-      <input type=submit value=Upload>
+    
+    <div class = 'mb-3'>
+      <label class = 'form-label' for = 'file'>Upload file: </label>
+      <input class = 'form-control' type='file' name='file' multiple>
+    </div>
+    <div class = 'mb-3 col text-center'>
+      <button type='submit' class = 'btn btn-primary' value='Upload'>Submit</button>
     </div>
   </fieldset>
 </form>
