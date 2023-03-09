@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, current_app
 from flask_login import login_required, current_user
-from .models import Note
+from .models import Note, Upload
 from .import db
 import json
 from werkzeug.utils import secure_filename
@@ -12,48 +12,77 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
-@views.route('/', methods = ['GET', 'POST'])
+@views.route('/upload', methods = ['GET', 'POST'])
 @login_required
 def upload_file():
     if request.method == 'POST':
+        print(request.form)
+        print(request.json)
+        print(request.files.getlist('file'))
+        files = request.files.getlist('file')
+        task = request.form['task']
+        comment = request.form.get('comment', '')
+        num_files = len(files)
+        id = request.form['participant-id']
+        print(task)
+        print(comment)
+        print(num_files)
+        print(id)
+        upload_query = db.session.query(Upload).filter_by(participant_id = id, task = task)
+        print(upload_query)
+        if all(files) and all([allowed_file(file.filename) for file in files]):
+            dir = os.path.join(current_app.config['UPLOAD_FOLDER'], id, task)
+            if not os.path.exists(dir):
+                os.makedirs(dir, exist_ok = True)
+            print(dir)
+            for index, file in enumerate(files, start = 1):
+                ext = file.filename.rsplit('.', 1)[1].lower()
+                filename = '%s_%s_part%dof%d.%s' % (id, task, index, num_files, ext)
+                file.save(os.path.join(dir, filename))
+            new_upload = Upload(participant_id = id, 
+                                task = task, 
+                                user_id = current_user.id,
+                                num_files = num_files, 
+                                comment = comment)
+            db.session.add(new_upload)
+            db.session.commit()
+            flash('Upload successful!', category = 'success')
+            return redirect(request.url)
+    '''
         # check if the post request has the file part
+        upload_query = db.session.query(Upload).filter_by(Upload.participant_id == id, Upload.task == task)
+        # check if a file has already been uploaded for this participant/task
+        if upload_query:
+            flash('Files have already been uploaded for this participant and task', category = 'error')
         if 'file' not in request.files:
             flash('No file part', category = 'error')
             return redirect(request.url)
-        files = request.files.getlist('file')
-        task = request.form['task']
-        id = request.form['participant-id']
-        num_files = len(files)
         # check if ID is 5 digits
         if len(id) != 5 or not id.isdigit():
             flash('Please enter valid 5-digit ID.', category = 'error')
         # check if task is selected
-        if task == '':
+        elif task == '':
             flash('Please select a task', category = 'error')
-        # If the user does not select a file, the browser submits an
+        # Check if the user does not select a file, the browser submits an
         # empty file without a filename.
-        if '' in [file.filename for file in files]:
+        elif '' in [file.filename for file in files]:
             flash('Please make sure file names are not blank.', category = 'error')
             return redirect(request.url)
-        if all(files) and all([allowed_file(file.filename) for file in files]):
-            dir = os.path.join(current_app.config['UPLOAD_FOLDER'], task, id)
-            if not os.path.exists(dir):
-                os.mkdir(dir)
-            for index, file in enumerate(files, start = 1):
-                ext = file.filename.rsplit('.', 1)[1].lower()
-                filename = '%s_%s_part%dof%d.%s' % (id, task, index, num_files, ext)
-                file.save(dir, filename)
-            flash('Upload successful!', category = 'success')
-            return redirect(request.url)
-        
-        # Other conditions:
-        # File hasn't already been uploaded
-
         # To add:
         # Update db
+    '''
 
+    return render_template('upload.html', user = current_user)
 
-    return render_template('home.html', user = current_user)
+@views.route('/search', methods = ['GET', 'POST'])
+@login_required
+def search_upload():
+    if request.method == 'POST':
+        id = request.form['participant-id']
+        upload_query = db.session.query(Upload).filter_by(participant_id = id).order_by(Upload.task)
+        results = upload_query if upload_query.first() else [f'It looks like no audio files have been uploaded for participant {id}.']
+        return render_template('search.html', user = current_user, results = results)
+    return render_template('search.html', user = current_user)
 
 @views.route('/', methods = ['GET', 'POST'])
 @login_required

@@ -2,30 +2,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 align = 'center'>Upload New File</h1>
+<h1 align = 'center'>Welcome!</h1>
 
-<form method = 'POST' enctype='multipart/form-data'>
-  <fieldset>
-    <legend>Upload Audio</legend>
-    <label for = 'participant-id'>Participant ID: </label>
-    <input type = 'text'
-    class = 'form-control'
-    id = 'participant-id'
-    name = 'participant-id'
-    placeholder = 'Enter participant ID (5 digits)'
-    maxlength = 5 />
-    <label for = 'task'>Select a task</label>
-    <div>
-      <input type="radio" name="task" id="task1" value="task1"> Task 1 </input><br>
-      <input type="radio" name="task" id="task2" value="task2"> Task 2 </input><br>
-      <input type="radio" name="task" id="task3" value="task3"> Task 3 </input><br>
-    </div>
-    <label for = 'file'>Upload file: </label>
-    <div>
-      <input type=file name=file multiple>
-      <input type=submit value=Upload>
-    </div>
-  </fieldset>
-</form>
 {% endblock %}
 

@@ -3,6 +3,7 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
+import re
 
 auth = Blueprint('auth', __name__)
 
@@ -38,11 +39,12 @@ def sign_up():
         password2 = request.form.get('password2')
 
         user = User.query.filter_by(email = email).first()
+        regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 
         if user:
             flash('Email already exists.', category = 'error')
-        elif len(email) < 4:
-            flash('Email must be greater than 3 characters.', category = 'error')
+        elif not re.fullmatch(regex, user):
+            flash('Enter valid email address', category = 'error')
         elif len(first_name) < 2:
             flash('First name must be greater than 1 character.', category = 'error')
         elif password1 != password2:
