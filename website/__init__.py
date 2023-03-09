@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path, mkdir
 from flask_login import LoginManager
+import random
 
 db = SQLAlchemy()
 DB_NAME = 'database.db'

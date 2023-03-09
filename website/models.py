@@ -22,7 +22,14 @@ class Upload(db.Model):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
-    email = db.Column(db.String(150), unique = True)
-    password = db.Column(db.String(150))
-    first_name = db.Column(db.String(150))
+    email = db.Column(db.String(50), unique = True)
+    password = db.Column(db.String(50))
+    name = db.Column(db.String(50))
     notes = db.relationship('Note')
+
+# I ran the following code to generate a list of random participant ID's, then manually imported it into the database
+# df = pd.DataFrame(data = {'id': range(1, 201), 'participant_id': random.sample(range(10000, 100000), k = 200)})
+# df.to_csv('participant_id.csv', index = False)
+class ParticipantId(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    participant_id = db.Column(db.String(5))

@@ -72,6 +72,8 @@ def upload_file():
         # Update db
     '''
 
+    # Add autocomplete feature when typing participant ID's
+
     return render_template('upload.html', user = current_user)
 
 @views.route('/search', methods = ['GET', 'POST'])
