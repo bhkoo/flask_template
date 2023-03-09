@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Upload{% endblock %}
+
+{% block content %}
+<h1 align = 'center'>Upload Files</h1>
+
+<form method = 'POST' enctype='multipart/form-data'>
+  {{ form.csrf_token }}
+  <fieldset>
+    <div  class = 'mb-3'>
+      <label class='form-label'>{{ form.participant_id.label }}</label>
+      {{ form.participant_id(class = 'form-control', placeholder = 'Enter participant ID (5 digits)', maxlength = 5) }}
+      <!---<input type = 'text'
+      class = 'form-control'
+      id = 'participant-id'
+      name = 'participant-id'
+      placeholder = 'Enter participant ID (5 digits)'
+      maxlength = 5 />--->
+    </div>
+    {% if form.participant_id.errors %}
+    <ul class="errors">
+        {% for error in form.participant_id.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class = 'mb-3'>
+      <label for = 'task'>{{ form.task.label }}</label>
+      {% for subfield in form.task %}
+        <div class='form-check'>
+          {{ subfield(class = 'form-check-input') }}
+          {{ subfield.label(class = 'form-check-label') }}
+        </div>
+      {% endfor %}
+      <!-- {{ form.task(class = 'form-check') }} -->
+      <!--  <div class='form-check'>
+          <input class='form-check-input' type='radio' name='task' id='task1' value='task1'> 
+            <label class='form-check-label' for='task1'>
+              Task 1
+            </label>
+          </input>
+        </div>
+        <div class='form-check'>
+          <input class='form-check-input' type='radio' name='task' id='task2' value='task2'> 
+            <label class='form-check-label' for='task2'>
+              Task 2
+            </label>
+          </input>
+        </div>
+        <div class='form-check'>
+          <input class='form-check-input' type='radio' name='task' id='task3' value='task3'> 
+            <label class='form-check-label' for='task3'>
+              Task 3
+            </label>
+          </input>
+        </div>-->
+    {% if form.task.errors %}
+    <ul class="errors">
+        {% for error in form.task.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    </div>
+    <label for = 'comment'>{{ form.comment.label }}</label>
+    <div class = 'mb-3 form-floating'>
+      {{ form.comment(class = 'form-control') }}
+      <!--<textarea class = 'form-control' name = 'comment' id = 'comment' maxlength = 1000></textarea>-->
+    </div>
+    {% if form.comment.errors %}
+    <ul class="errors">
+        {% for error in form.comment.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class = 'mb-3'>
+      <label class = 'form-label' for = 'files'>{{ form.files.label }}</label>
+      {{ form.files(class = 'form-control') }}
+      <!--<input class = 'form-control' type='file' name='files' accept = '.mp3' multiple>-->
+    </div>
+    {% if form.files.errors %}
+    <ul class="errors">
+        {% for error in form.files.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class = 'mb-3 col text-center'>
+      <button type='submit' class = 'btn btn-primary' value='Upload'>Submit</button>
+    </div>
+  </fieldset>
+</form>
+{% endblock %}
+
