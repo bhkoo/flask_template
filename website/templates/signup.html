@@ -3,46 +3,27 @@
 
 {% block content %}
 <form method = 'POST'>
+  {{ form.csrf_token }}
   <h3 align = 'center'>Sign Up</h3>
-  <div class = 'form-group mb-3'>
-    <label for='email'>Email Address</label>
-    <input
-      type = 'email'
-      class = 'form-control'
-      id = 'email'
-      name = 'email'
-      placeholder = 'Enter Email'/>
-  </div>
-  <div class = 'form-group mb-3'>
-    <label for='name'>Name</label>
-    <input
-      type = 'text'
-      class = 'form-control'
-      id = 'name'
-      name = 'name'
-      placeholder = 'Enter full name'/>
-  </div>
-  <div class = 'form-group mb-3'>
-    <label for='password1'>Password</label>
-    <input
-      type = 'password'
-      class = 'form-control'
-      id = 'password1'
-      name = 'password1'
-      placeholder = 'Enter password'/>
-  </div>
-  <div class = 'form-group mb-3'>
-    <label for='password2'>Confirm Password</label>
-    <input
-      type = 'password'
-      class = 'form-control'
-      id = 'password2'
-      name = 'password2'
-      placeholder = 'Confirm password'/>
-  </div>
+    <div class = 'form-group mb-3'>
+      <label for='name'>{{ form.name.label }}</label>
+      {{ form.name(class = 'form-control', placeholder = 'Enter full name') }}
+    </div>
+    <div class = 'form-group mb-3'>
+      <label for='email'>{{ form.email.label }}</label>
+      {{ form.email(class = 'form-control', placeholder = 'Enter email') }}
+    </div>
+    <div class = 'form-group mb-3'>
+      <label for='password'>{{ form.password.label }}</label>
+      {{ form.password(class = 'form-control', placeholder = 'Enter password') }}
+    </div>
+    <div class = 'form-group mb-3'>
+      <label for='confirm'>{{ form.confirm.label }}</label>
+      {{ form.confirm(class = 'form-control', placeholder = 'Confirm password') }}
+    </div>
   <br/>
   <div class = 'col text-center'>
-    <button type = 'submit' class = 'btn btn-primary'>Submit</button>
+    {{ form.submit(class = 'btn btn-primary') }}
   </div>
 </form>
 {% endblock %}

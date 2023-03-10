@@ -2,17 +2,29 @@
 {% block title %}Search{% endblock %}
 
 {% block content %}
+
 <h1 class = 'text-center'>Search</h1>
 
 <p class = 'text-center'>Enter a 5-digit participant ID to confirm which task's audio files have been uploaded.</p>
 
 <form method = 'POST'>
-    <input name = 'participant-id' id = 'participant-id' class = 'form-control' placeholder = 'Enter participant ID (5 digits)' maxlength =  5></input>
-    <br />
-    <div class = 'text-center'>
-      <button type = 'submit' class = 'btn btn-primary'>Search</button>
+    {{ form.csrf_token }}
+    <div class = 'form-group' style = 'position: relative;'>
+        <label class='form-label'>{{ form.participant_id.label }}</label>
+        {{ form.participant_id(class = 'form-control', placeholder = 'Enter participant ID (5 digits)', maxlength = 5,
+                                autocomplete = 'off', onkeyup = 'formAutocomplete()') }}
+        
+        <div id = 'suggestions'>
+        </div>
+        <br />
+        <div class = 'text-center'>
+            {{ form.submit(class = 'btn btn-primary') }}
+        </div>
+        <div id = 'result'>
+        </div>
     </div>
 </form>
+<p>{{ id_list }}</p>
 <br>
 <div class = 'container text-center'>
     {% for r in results %}

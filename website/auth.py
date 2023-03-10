@@ -3,17 +3,18 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
-import re
+from .forms import SignupForm, LoginForm
 
 auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods = ['GET', 'POST'])
 def login():
+    form = LoginForm()
     if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        user = User.query.filter_by(email = email).first()
-        if user:
+        if form.validate_on_submit():
+            email = form.email.data
+            password = form.password.data
+            user = User.query.filter_by(email = email).first()
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category = 'success')
                 login_user(user, remember = True)
@@ -21,8 +22,8 @@ def login():
             else:
                 flash('Incorrect password. Try again.', category = 'error')
         else:
-            flash('Email does not exist.', category = 'error')
-    return render_template('login.html', user = current_user)
+            flash(list(form.errors.values())[0][0], category = 'error')
+    return render_template('login.html', user = current_user, form = form)
 
 @auth.route('/logout')
 @login_required
@@ -32,31 +33,20 @@ def logout():
 
 @auth.route('/signup', methods = ['GET', 'POST'])
 def sign_up():
+    form = SignupForm()
     if request.method == 'POST':
-        email = request.form.get('email')
-        name = request.form.get('name')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
+        if form.validate_on_submit():
+            name = form.name.data
+            email = form.email.data
+            password = form.password.data
 
-        user = User.query.filter_by(email = email).first()
-        regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
-
-        if user:
-            flash('Email already exists.', category = 'error')
-        elif len(email) < 5:
-            flash('Enter valid email address', category = 'error')
-        elif len(name) < 2:
-            flash('Name must be greater than 1 character.', category = 'error')
-        elif password1 != password2:
-            flash('Passwords don\'t match.', category = 'error')
-        elif len(password1) < 7:
-            flash('Passwords must be greater than 7 characters.', category = 'error')
-        else:
-            new_user = User(email = email, name = name, password = generate_password_hash(password1, method = 'sha256'))
+            new_user = User(email = email, name = name, password = generate_password_hash(password, method = 'sha256'))
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember = True)
             flash('Account created', category = 'success')
             return redirect(url_for('views.home'))
+        else:
+            flash(list(form.errors.values())[0][0], category = 'error')
 
-    return render_template('signup.html', user = current_user)
+    return render_template('signup.html', user = current_user, form = form)

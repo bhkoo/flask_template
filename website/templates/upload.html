@@ -4,52 +4,35 @@
 {% block content %}
 <h1 align = 'center'>Upload Files</h1>
 
-<form method = 'POST' enctype='multipart/form-data'>
+<form method = 'POST' enctype='multipart/form-data' autocomplete = 'off'>
+  {{ form.csrf_token }}
   <fieldset>
-    <div  class = 'mb-3'>
-      <label for = 'participant-id' class='form-label'>Participant ID: </label>
-      <input type = 'text'
-      class = 'form-control'
-      id = 'participant-id'
-      name = 'participant-id'
-      placeholder = 'Enter participant ID (5 digits)'
-      maxlength = 5 />
+    <div class = 'mb-3' style = 'position: relative'>
+      <label class='form-label'>{{ form.participant_id.label }}</label>
+      {{ form.participant_id(class = 'form-control', placeholder = 'Enter participant ID (5 digits)', 
+                            maxlength = 5, autocomplete = 'off', onkeyup = 'formAutocomplete()') }}
+      <div id = 'suggestions'>
+      </div>
     </div>
     <div class = 'mb-3'>
-      <label for = 'task'>Select a task:</label>
+      <label for = 'task'>{{ form.task.label }}</label>
+      {% for subfield in form.task %}
         <div class='form-check'>
-          <input class='form-check-input' type='radio' name='task' id='task1' value='task1'> 
-            <label class='form-check-label' for='task1'>
-              Task 1
-            </label>
-          </input>
+          {{ subfield(class = 'form-check-input', required = 'true') }}
+          {{ subfield.label(class = 'form-check-label') }}
         </div>
-        <div class='form-check'>
-          <input class='form-check-input' type='radio' name='task' id='task2' value='task2'> 
-            <label class='form-check-label' for='task2'>
-              Task 2
-            </label>
-          </input>
-        </div>
-        <div class='form-check'>
-          <input class='form-check-input' type='radio' name='task' id='task3' value='task3'> 
-            <label class='form-check-label' for='task3'>
-              Task 3
-            </label>
-          </input>
-        </div>
+      {% endfor %}
     </div>
-    <label for = 'comment'>Comment: </label>
+    <label for = 'comment'>{{ form.comment.label }}</label>
     <div class = 'mb-3 form-floating'>
-      <textarea class = 'form-control' name = 'comment' id = 'comment' maxlength = 1000></textarea>
+      {{ form.comment(class = 'form-control') }}
     </div>
-    
     <div class = 'mb-3'>
-      <label class = 'form-label' for = 'file'>Upload file: </label>
-      <input class = 'form-control' type='file' name='file' multiple>
+      <label class = 'form-label' for = 'files'>{{ form.files.label }}</label>
+      {{ form.files(class = 'form-control') }}
     </div>
     <div class = 'mb-3 col text-center'>
-      <button type='submit' class = 'btn btn-primary' value='Upload'>Submit</button>
+      {{ form.submit(class = 'btn btn-primary') }}
     </div>
   </fieldset>
 </form>

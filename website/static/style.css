@@ -1,0 +1,27 @@
+#suggestions {
+    position: absolute;
+    z-index: 999;
+    background-color: white;
+    border: 1px solid gray;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    left: 0;
+    margin-top: 2px;
+    display: none;
+  }
+  
+  #suggestions div {
+    padding: 5px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  #suggestions div:hover {
+    background-color: lightgray;
+    cursor: pointer;
+  }
+  
+  #suggestions div:hover * {
+    cursor: pointer;
+  }
