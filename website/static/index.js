@@ -1,12 +1,4 @@
-function deleteNote(noteId) {
-  fetch('/delete-note', {
-    method: 'POST',
-    body: JSON.stringify({ noteId: noteId })
-  }).then((_res) => {
-    window.location.href = '/';
-  });
-}
-
+// Populates autocomplete div based on form input for participant ID's
 function formAutocomplete() {
   var input = document.getElementById('participant_id');
   var suggestionsDiv = document.getElementById('suggestions');

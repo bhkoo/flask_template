@@ -7,6 +7,7 @@ from .forms import SignupForm, LoginForm
 
 auth = Blueprint('auth', __name__)
 
+# Routing for login page
 @auth.route('/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -25,12 +26,14 @@ def login():
             flash(list(form.errors.values())[0][0], category = 'error')
     return render_template('login.html', user = current_user, form = form)
 
+# Routing for logout page
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
+# Routing for signup page
 @auth.route('/signup', methods = ['GET', 'POST'])
 def sign_up():
     form = SignupForm()
